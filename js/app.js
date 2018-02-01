@@ -1,4 +1,4 @@
-/* Generador de Nombres */
+/* Generador de Nombres usando AJAX y REST API */
 
 // Evento 'submit' para el botón de enviar del formulario
 document .querySelector( '#generar-nombre' ) .addEventListener( 'submit', cargarNombres );
@@ -31,5 +31,44 @@ function cargarNombres( e ) {
     }
 
     console .log( 'url ', url ); 
+
+    // Conectar Con AJAX
+    const xhr = new XMLHttpRequest();       // Instanciar XMLHttpRequest
+
+    // Abre la conexión
+    xhr .open(
+        'GET',      // Método: GET, POST, PUT, PATCH, DELETE...
+        url,        // Path (de la REST API en este caso)
+        true        // [true/false] Si es asíncrono 
+    );
+
+    // Onload: Una ves la conexión se ha realizado
+    xhr .onload = function() {
+        // Valida que el estado sea correcto (200)
+        if( this .status === 200 ) {
+            const nombres = JSON .parse( this .responseText );      // Convierte un JSON a un 'Array' de Objetos
+
+            // Generar Template 
+            let htmlNombres = '<h2>Nombres Generados</h2>';
+            htmlNombres += '<ul class="lista">';
+
+            // Recorre 'Array' nombres
+            nombres .forEach( function( nombre ) {
+                htmlNombres += `<li>${ nombre .name}</li>`;    
+            });
+            
+            htmlNombres += '</ul>';
+
+            // Agrega el Template con los datos al DOM
+            document .getElementById( 'resultado' ) .innerHTML = htmlNombres;
+
+            console .log( 'Response ', nombres );
+
+            
+        }
+    }
+
+    // Envia la petición
+    xhr .send();
     
 }
