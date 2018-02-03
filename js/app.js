@@ -33,30 +33,23 @@ function cargarNombres(e) {
     console.log('url ', url);
 
     // FecthAPI usando Promises
-    fetch( url )                                                        // Se conecta a los datos
-        .then( function( response ) {                                   // Recibe la respuesta
-            console .log( 'Respuesta ', response );
+    fetch( url )                                                            // Se conecta a los datos
+        .then( response => response .json() )                               // Recibe la respuesta
+        .then( data => {
+            let html = `<h2>Nombres Generados</h2>`;                        // Crea Template
+            
+            html += `<ul class="lista">`;                                   // Agrega al Template
+            console .log( 'Datos ', data );
 
-            return response .json();                                    // Promise:
-                                                                        //    Indica el método en el que se recibirán los datos, se puede revisar
-                                                                        //    el 'proto' para ver los métodos disponibles
-    }) .then( function( data ) {
-        let html = `<h2>Nombres Generados</h2>`;                        // Crea Template
-        
-        html += `<ul class="lista">`;                                   // Agrega al Template
-        console .log( 'Datos ', data );
+            // Recorre y agrega los datos en el Template
+            data .forEach( nombre => {
+                html += `
+                    <li>${ nombre .name }</li>
+                `;
+            });
+            html += `</ul>`;                                                // Agrega al Template
 
-        // Recorre y agrega los datos en el Template
-        data .forEach( function( nombre ) {
-            html += `
-                <li>${ nombre .name }</li>
-            `;
-        });
-        html += `</ul>`;                                                // Agrega al Template
+            document .querySelector( '#resultado' ) .innerHTML = html;      // Agrega el Template con los datos al DOM
 
-        document .querySelector( '#resultado' ) .innerHTML = html;      // Agrega el Template con los datos al DOM
-
-    }) .catch( function( error ) {
-        console .log( 'ERROR ', error );
-    }); 
+        }) .catch( error => console .log( 'ERROR ', error ) ); 
 }
